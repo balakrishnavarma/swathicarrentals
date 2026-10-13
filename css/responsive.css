@@ -199,16 +199,36 @@
         padding: 10px 5px !important;
     }
 
-    /* Car Details Page */
+    /* Car Details Page Mobile */
     .car-details-container {
         flex-direction: column !important;
-        gap: 25px !important;
+        gap: 20px !important;
         margin-top: 15px !important;
     }
 
-    .car-details-image {
-        height: 250px !important;
+    .car-details-image-box {
+        width: 100% !important;
+        max-width: 100% !important;
         min-width: 100% !important;
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        margin-bottom: 10px !important;
+        background-color: #f1f5f9 !important;
+    }
+
+    .car-details-img {
+        width: 100% !important;
+        height: 240px !important;
+        max-height: 260px !important;
+        object-fit: cover !important;
+        display: block !important;
+    }
+
+    .car-details-image {
+        width: 100% !important;
+        height: 240px !important;
+        min-height: 240px !important;
+        display: block !important;
     }
 
     .car-details-info {
