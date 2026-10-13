@@ -254,8 +254,8 @@ ul {
 
 /* Hero Section */
 .hero {
-    height: 70vh;
-    min-height: 480px;
+    height: 100vh;
+    min-height: 600px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -339,7 +339,6 @@ ul {
     margin: 0 auto;
     text-align: center;
     padding: 0 20px;
-    padding-bottom: 100px;
 }
 
 .hero-content h1,
@@ -391,10 +390,7 @@ ul {
     gap: 15px;
 }
 
-@media (max-width: 1200px) {
-    .car-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    }
+
 }
 
 .car-card {

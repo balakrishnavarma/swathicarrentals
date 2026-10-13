@@ -1,84 +1,19 @@
-/* Responsive Styles for Swathi Car Rentals */
+/* Responsive Styles for Swathi Car Rentals - Mobile Only (<= 768px) */
 
-/* General Box-sizing and viewport overflow safety */
-html, body {
-    overflow-x: hidden !important;
-    width: 100% !important;
-    max-width: 100vw !important;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-*, *::before, *::after {
-    box-sizing: border-box;
-}
-
-/* Nav container base */
-.nav-container {
-    width: 100%;
-    max-width: 1300px;
-    margin: 0 auto;
-    padding: 0 30px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-.navbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    text-decoration: none;
-}
-
-.nav-logo {
-    height: 65px;
-    width: auto;
-    object-fit: contain;
-}
-
-.nav-brand-text {
-    font-family: 'Inter', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #1e293b;
-    white-space: nowrap;
-}
-
-/* Tablet view (<= 1200px) */
-@media (max-width: 1200px) {
-    .car-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
-    }
-}
-
-/* Medium Tablets & Below (<= 992px) */
-@media (max-width: 992px) {
-    .nav-brand-text {
-        font-size: 1.25rem;
-    }
-    .nav-logo {
-        height: 52px;
-    }
-    .navbar-nav {
-        gap: 15px;
-    }
-    .navbar-nav a {
-        font-size: 1.05rem;
-    }
-    .car-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 15px !important;
-    }
-}
-
-/* Mobile Devices (<= 768px) */
+/* Mobile Phones & Small Screens Only */
 @media (max-width: 768px) {
-    /* Navbar */
+    html, body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100vw !important;
+        box-sizing: border-box;
+    }
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    /* Navbar on Mobile */
     .navbar {
         padding: 8px 0 !important;
         position: sticky !important;
@@ -90,7 +25,7 @@ html, body {
 
     .nav-container {
         padding: 0 15px !important;
-        position: relative;
+        position: relative !important;
     }
 
     .navbar-brand {
@@ -154,7 +89,7 @@ html, body {
         border-bottom: 1px solid #f1f5f9;
     }
 
-    /* Hero Section Mobile - Compact banner */
+    /* Hero Section Mobile */
     .hero {
         height: auto !important;
         min-height: 340px !important;
@@ -324,7 +259,7 @@ html, body {
     }
 }
 
-/* Small phones (<= 480px) */
+/* Very Small Phones (<= 480px) */
 @media (max-width: 480px) {
     .nav-brand-text {
         font-size: 0.92rem !important;
