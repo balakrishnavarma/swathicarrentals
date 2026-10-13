@@ -6,9 +6,11 @@ for filename in os.listdir('.'):
         with open(filename, 'r', encoding='utf-8') as f:
             content = f.read()
         
-        # Update cache buster for main.js and fleet.js
-        content = re.sub(r'src="js/main\.js(\?v=\d+)?"', 'src="js/main.js?v=35"', content)
-        content = re.sub(r'src="js/fleet\.js(\?v=\d+)?"', 'src="js/fleet.js?v=35"', content)
+        # Update cache buster for style.css, responsive.css, main.js, fleet.js
+        content = re.sub(r'href="css/style\.css(\?v=\d+)?"', 'href="css/style.css?v=36"', content)
+        content = re.sub(r'href="css/responsive\.css(\?v=\d+)?"', 'href="css/responsive.css?v=36"', content)
+        content = re.sub(r'src="js/main\.js(\?v=\d+)?"', 'src="js/main.js?v=36"', content)
+        content = re.sub(r'src="js/fleet\.js(\?v=\d+)?"', 'src="js/fleet.js?v=36"', content)
         
         with open(filename, 'w', encoding='utf-8') as f:
             f.write(content)

@@ -1,0 +1,383 @@
+/* Responsive Styles for Swathi Car Rentals */
+
+/* General Box-sizing and viewport overflow safety */
+html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+/* Nav container base */
+.nav-container {
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.nav-logo {
+    height: 65px;
+    width: auto;
+    object-fit: contain;
+}
+
+.nav-brand-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #1e293b;
+    white-space: nowrap;
+}
+
+/* Tablet view (<= 1200px) */
+@media (max-width: 1200px) {
+    .car-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    }
+}
+
+/* Medium Tablets & Below (<= 992px) */
+@media (max-width: 992px) {
+    .nav-brand-text {
+        font-size: 1.25rem;
+    }
+    .nav-logo {
+        height: 52px;
+    }
+    .navbar-nav {
+        gap: 15px;
+    }
+    .navbar-nav a {
+        font-size: 1.05rem;
+    }
+    .car-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 15px !important;
+    }
+}
+
+/* Mobile Devices (<= 768px) */
+@media (max-width: 768px) {
+    /* Navbar */
+    .navbar {
+        padding: 8px 0 !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+        background-color: rgba(255, 255, 255, 0.98) !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .nav-container {
+        padding: 0 15px !important;
+        position: relative;
+    }
+
+    .navbar-brand {
+        gap: 8px !important;
+    }
+
+    .nav-logo {
+        height: 48px !important;
+    }
+
+    .nav-brand-text {
+        font-size: 1.05rem !important;
+        letter-spacing: 0px !important;
+    }
+
+    .mobile-menu-btn {
+        display: block !important;
+        background: transparent !important;
+        border: none !important;
+        color: var(--color-accent) !important;
+        font-size: 1.6rem !important;
+        cursor: pointer !important;
+        padding: 8px 10px !important;
+        z-index: 1001;
+    }
+
+    .navbar-nav {
+        display: none !important;
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        width: 100% !important;
+        background-color: #ffffff !important;
+        flex-direction: column !important;
+        padding: 12px 20px !important;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12) !important;
+        border-top: 2px solid var(--color-accent) !important;
+        gap: 8px !important;
+        box-sizing: border-box !important;
+    }
+
+    .navbar-nav.active {
+        display: flex !important;
+        animation: mobileNavFade 0.2s ease-in-out;
+    }
+
+    @keyframes mobileNavFade {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .navbar-nav li {
+        width: 100%;
+    }
+
+    .navbar-nav a {
+        display: block;
+        padding: 12px 14px !important;
+        font-size: 1.1rem !important;
+        border-radius: 6px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+
+    /* Hero Section Fix - No more overlapping! */
+    .hero {
+        height: auto !important;
+        min-height: auto !important;
+        display: flex !important;
+        flex-direction: column !important;
+        position: relative !important;
+        padding: 0 !important;
+        background-color: #0f172a !important;
+    }
+
+    .hero-slider {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    .hero-content {
+        padding: 40px 15px 25px !important;
+        text-align: center !important;
+        position: relative !important;
+        z-index: 2 !important;
+        max-width: 100% !important;
+    }
+
+    .hero-content h1 {
+        font-size: 2rem !important;
+        line-height: 1.25 !important;
+        margin-bottom: 15px !important;
+    }
+
+    .hero-content p {
+        font-size: 0.95rem !important;
+        margin-bottom: 20px !important;
+        line-height: 1.5 !important;
+    }
+
+    .hero-buttons {
+        margin-bottom: 10px !important;
+    }
+
+    .hero-buttons .btn {
+        padding: 12px 30px !important;
+        font-size: 1.05rem !important;
+        width: 100%;
+        max-width: 240px;
+    }
+
+    /* Search Section flows cleanly right below Hero Text */
+    .search-section {
+        position: relative !important;
+        bottom: auto !important;
+        left: auto !important;
+        width: 100% !important;
+        padding: 22px 15px !important;
+        background-color: #ffffff !important;
+        border-radius: 20px 20px 0 0 !important;
+        box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.12) !important;
+        z-index: 5 !important;
+        margin-top: 15px !important;
+    }
+
+    .search-form {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .form-group {
+        margin-bottom: 0 !important;
+    }
+
+    .form-group label {
+        font-size: 0.88rem !important;
+        margin-bottom: 5px !important;
+        color: #475569 !important;
+        font-weight: 600 !important;
+    }
+
+    .form-control {
+        padding: 12px 14px !important;
+        font-size: 1rem !important;
+        border-radius: 8px !important;
+    }
+
+    .search-form .btn {
+        padding: 14px !important;
+        font-size: 1.05rem !important;
+        margin-top: 5px !important;
+        border-radius: 8px !important;
+    }
+
+    /* Fleet Section */
+    .section-padding {
+        padding: 35px 0 !important;
+    }
+
+    .section-header {
+        margin-bottom: 25px !important;
+    }
+
+    .section-header h2 {
+        font-size: 1.75rem !important;
+    }
+
+    .section-header p {
+        font-size: 0.92rem !important;
+    }
+
+    .car-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        padding: 0 5px !important;
+    }
+
+    .car-card {
+        max-width: 100% !important;
+    }
+
+    .car-image {
+        height: 210px !important;
+    }
+
+    .car-content {
+        padding: 16px !important;
+    }
+
+    .car-content h3 {
+        font-size: 1.2rem !important;
+    }
+
+    .car-features {
+        font-size: 0.8rem !important;
+        gap: 8px !important;
+    }
+
+    /* Steps / How It Works */
+    .steps-container {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+
+    .step {
+        width: 100% !important;
+        min-width: 100% !important;
+        padding: 10px 5px !important;
+    }
+
+    /* Car Details Page */
+    .car-details-container {
+        flex-direction: column !important;
+        gap: 25px !important;
+        margin-top: 15px !important;
+    }
+
+    .car-details-image {
+        height: 250px !important;
+        min-width: 100% !important;
+    }
+
+    .car-details-info {
+        min-width: 100% !important;
+    }
+
+    .car-details-price {
+        font-size: 1.5rem !important;
+        margin-bottom: 15px !important;
+    }
+
+    .feature-list {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+    }
+
+    .feature-item {
+        font-size: 0.95rem !important;
+    }
+
+    /* CTA Section */
+    .cta-section h2 {
+        font-size: 1.6rem !important;
+    }
+
+    .cta-section p {
+        font-size: 0.95rem !important;
+    }
+
+    .cta-buttons .btn {
+        width: 100% !important;
+        max-width: 260px !important;
+    }
+
+    /* Footer */
+    .footer {
+        padding: 40px 0 20px !important;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr !important;
+        gap: 25px !important;
+        text-align: center !important;
+    }
+
+    .footer-col h4 {
+        margin-bottom: 12px !important;
+    }
+}
+
+/* Small phones (<= 480px) */
+@media (max-width: 480px) {
+    .nav-brand-text {
+        font-size: 0.92rem !important;
+    }
+
+    .nav-logo {
+        height: 40px !important;
+    }
+
+    .hero-content h1 {
+        font-size: 1.8rem !important;
+    }
+
+    .feature-list {
+        grid-template-columns: 1fr !important;
+    }
+}

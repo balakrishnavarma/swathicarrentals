@@ -6,12 +6,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (navbarContainer) {
         navbarContainer.innerHTML = `
             <nav class="navbar">
-                <div style="width: 100%; padding: 0 40px; display: flex; justify-content: space-between; align-items: center;">
-                    <a href="index.html" class="navbar-brand" style="display: flex; align-items: center; gap: 15px; text-decoration: none;">
-                        <img src="assets/images/logo_transparent.png" alt="Swathi Car Rentals Logo" style="height: 100px; width: auto;">
-                        <span style="font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #1e293b;">Swathi Car Rentals</span>
+                <div class="nav-container">
+                    <a href="index.html" class="navbar-brand">
+                        <img src="assets/images/logo_transparent.png" alt="Swathi Car Rentals Logo" class="nav-logo">
+                        <span class="nav-brand-text">Swathi Car Rentals</span>
                     </a>
-                    <button class="mobile-menu-btn" id="mobile-menu-btn">
+                    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation">
                         <i class="fas fa-bars"></i>
                     </button>
                     <ul class="navbar-nav" id="navbar-nav">
