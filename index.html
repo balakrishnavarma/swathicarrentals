@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Car Rental | Your Journey. Your Car. Your Freedom.</title>
+    <link rel="stylesheet" href="css/style.css?v=3">
+    <link rel="stylesheet" href="css/responsive.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navbar Placeholder -->
+    <div id="navbar-container"></div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-slider">
+                <div class="slide slide-1"></div>
+                <div class="slide slide-2"></div>
+                <div class="slide slide-3"></div>
+            </div>
+            <div class="hero-content">
+                <h1>Your Journey. Your Car.<br><span class="text-accent">Your Freedom.</span></h1>
+                <p>Premium self-drive cars for comfortable and flexible travel.</p>
+                <div class="hero-buttons">
+                    <a href="cars.html" class="btn btn-primary" style="padding: 15px 40px; font-size: 1.2rem;">Explore Cars</a>
+                </div>
+            </div>
+
+            <!-- Search Section -->
+            <div class="search-section">
+                <div class="container">
+                    <form class="search-form" id="mainSearchForm">
+                        <div class="form-group">
+                            <label>Pickup Date & Time</label>
+                            <input type="datetime-local" class="form-control" id="pickupDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Return Date & Time</label>
+                            <input type="datetime-local" class="form-control" id="returnDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Pickup Location</label>
+                            <select class="form-control" id="pickupLocation" required>
+                                <option value="" disabled selected>Select Location</option>
+                                <option value="office">Office</option>
+                                <option value="my_location">My Location</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="searchCarsBtn" style="width: 100%;">Search Cars</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Cars Section -->
+        <section class="featured-cars section-padding" id="fleet">
+            <div style="width: 95%; max-width: 100%; margin: 0 auto;">
+                <div class="section-header">
+                    <h2>Our Fleet</h2>
+                    <p>Select from our wide range of basic to premium vehicles</p>
+                </div>
+                <div class="car-grid" id="home-car-grid"></div><div id="view-all-cars-container" style="text-align: center; margin-top: 40px; display: none;"><a href="cars.html" class="btn btn-primary" style="padding: 12px 30px; font-size: 1.1rem; border-radius: 8px;">View All Cars <i class="fas fa-arrow-right"></i></a></div>
+            </div>
+        </section>
+
+        <!-- Why Choose Us Section -->
+        <section class="why-us section-padding bg-darker">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Why Choose Us</h2>
+                    <p>Experience the best self-drive car rental service</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-shield-alt text-accent"></i>
+                        <h3>Safe & Secure</h3>
+                        <p>All our cars are thoroughly sanitized and well maintained for your safety.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-headset text-accent"></i>
+                        <h3>24/7 Support</h3>
+                        <p>We provide round-the-clock customer support to assist you anytime.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-wallet text-accent"></i>
+                        <h3>Transparent Pricing</h3>
+                        <p>No hidden charges. You pay exactly what you see during booking.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-map-marked-alt text-accent"></i>
+                        <h3>Anywhere Delivery</h3>
+                        <p>Get your car delivered to your doorstep, airport, or hotel.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works section-padding">
+            <div class="container">
+                <div class="section-header">
+                    <h2>How It Works</h2>
+                    <p>Rent a car in 4 simple steps</p>
+                </div>
+                <div class="steps-container">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <h3>Sign Up & Verify</h3>
+                        <p>Create an account and verify your identity with DL & Aadhaar.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <h3>Choose A Car</h3>
+                        <p>Select from our wide range of premium vehicles.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <h3>Book & Pay</h3>
+                        <p>Select dates, locations, and confirm your booking.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">4</div>
+                        <h3>Enjoy The Ride</h3>
+                        <p>Pick up your car and enjoy the freedom of self-drive.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact / CTA Section -->
+        <section class="cta-section section-padding text-center">
+            <div class="container">
+                <h2>Ready for your next journey?</h2>
+                <p>Book your premium car today and experience true freedom.</p>
+                <div class="cta-buttons mt-4">
+                    <a href="cars.html" class="btn btn-primary" style="padding: 15px 40px; font-size: 1.2rem;">Book Now</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-container"></div>
+
+    <script src="js/main.js?v=35"></script>
+    <script src="js/fleet.js?v=35"></script>
+</body>
+</html>
+
+ 
+
+

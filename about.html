@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Swathi Car Rentals</title>
+    <link rel="stylesheet" href="css/style.css?v=3">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .about-hero {
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('assets/images/innova_crysta.jpg') center/cover;
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+            border-radius: var(--border-radius-lg);
+            margin-bottom: 60px;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .feature-card {
+            background: var(--color-bg-card);
+            padding: 40px 30px;
+            border-radius: var(--border-radius-md);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        .feature-card i {
+            font-size: 3rem;
+            color: var(--color-accent);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-container"></div>
+    
+    <main class="section-padding container">
+        <div class="about-hero">
+            <h1 style="font-size: 3rem; margin-bottom: 20px; font-family: var(--font-heading);">About Swathi Car Rentals</h1>
+            <p style="font-size: 1.2rem; max-width: 600px; margin: 0 auto;">Your trusted partner for premium self-drive car rentals. We believe in delivering comfort, safety, and a seamless travel experience.</p>
+        </div>
+
+        <div class="text-center" style="max-width: 800px; margin: 0 auto 60px;">
+            <h2 class="text-accent" style="margin-bottom: 20px;">Our Mission</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8; color: var(--color-text-light);">
+                At Swathi Car Rentals, our mission is to provide top-quality, well-maintained vehicles for everyone who loves to drive. Whether you're planning a weekend getaway, a business trip, or just need a reliable ride in the city, we have the perfect car for you. We strive to make car rentals as easy, transparent, and affordable as possible.
+            </p>
+        </div>
+
+        <h2 class="text-center">Why Choose Us?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <i class="fas fa-car"></i>
+                <h3>Premium Fleet</h3>
+                <p style="color: var(--color-text-light); margin-top: 15px;">Well-maintained, clean, and top-of-the-line vehicles to suit all your needs.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-tags"></i>
+                <h3>Best Prices</h3>
+                <p style="color: var(--color-text-light); margin-top: 15px;">Affordable daily rates with zero hidden charges. You pay for what you see.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-headset"></i>
+                <h3>24/7 Support</h3>
+                <p style="color: var(--color-text-light); margin-top: 15px;">Our dedicated team is always available to help you during your journey.</p>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-container"></div>
+    <script src="js/main.js?v=35"></script>
+</body>
+</html>

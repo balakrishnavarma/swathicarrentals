@@ -1,0 +1,195 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Details | Swathi Car Rentals</title>
+    <link rel="stylesheet" href="css/style.css?v=13">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .car-details-container {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .car-details-image {
+            flex: 1;
+            min-width: 300px;
+            height: 400px;
+            border-radius: var(--border-radius-md);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .car-details-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .car-details-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+
+        .feature-item i {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+    <main class="section-padding" style="min-height: 70vh;">
+        <div class="container">
+            <a href="cars.html" class="btn btn-outline" style="margin-bottom: 20px;"><i class="fas fa-arrow-left"></i>
+                Back to Fleet</a>
+            <div class="car-details-container">
+                <div class="car-details-image" id="carImage"></div>
+                <div class="car-details-info">
+                    <h1 id="carName" style="margin-bottom: 10px;">Loading...</h1>
+                    <div class="car-details-price" id="carPrice">...</div>
+                    <h3>Key Features</h3>
+                    <div class="feature-list" style="margin-top: 15px;">
+                        <div class="feature-item" id="carSeats"></div>
+                        <div class="feature-item" id="carFuel"></div>
+                        <div class="feature-item" id="carTrans"></div>
+                        <div class="feature-item"><i class="fas fa-snowflake"></i> AC</div>
+                    </div>
+                    <h3>Description</h3>
+                    <p style="margin-bottom: 20px; line-height: 1.6; color: #64748b;">
+                        Experience comfort and performance with this premium vehicle. Perfect for long drives, city
+                        commutes, or special occasions. Maintained to the highest standards of cleanliness and
+                        performance.
+                    </p>
+
+                    <div
+                        style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+                        <h4 style="margin-bottom: 15px;">Select Booking Dates</h4>
+                        <div style="margin-bottom: 15px;">
+                            <label
+                                style="display: block; margin-bottom: 5px; font-size: 0.9rem; font-weight: 500;">Pickup
+                                Date & Time</label>
+                            <input type="datetime-local" id="detailPickup"
+                                style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label
+                                style="display: block; margin-bottom: 5px; font-size: 0.9rem; font-weight: 500;">Return
+                                Date & Time</label>
+                            <input type="datetime-local" id="detailReturn"
+                                style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #cbd5e1;">
+                        </div>
+                        <div id="dateError"
+                            style="color: #ef4444; font-size: 0.9rem; margin-bottom: 10px; display: none;">Please select
+                            both dates.</div>
+                        <button id="bookBtn" class="btn btn-primary btn-lg"
+                            style="width: 100%; text-align: center; font-size: 1.2rem; cursor: pointer;"><i
+                                class="fab fa-whatsapp"></i> Book via WhatsApp</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <div id="footer-container"></div>
+    <script src="js/main.js?v=35"></script>
+    <script src="js/fleet.js?v=35"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const carId = urlParams.get('car');
+            const cars = getFleet();
+            const carData = cars.find(c => c.id === carId);
+
+            if (carData) {
+                document.getElementById('carName').textContent = carData.name;
+                document.getElementById('carPrice').textContent = "₹" + carData.price.toLocaleString('en-IN') + " / 12hrs";
+                document.getElementById('carSeats').innerHTML = `<i class="fas fa-users"></i> ${carData.seats} Seats`;
+                document.getElementById('carFuel').innerHTML = `<i class="fas fa-gas-pump"></i> ${carData.fuel}`;
+                document.getElementById('carTrans').innerHTML = `<i class="fas fa-cogs"></i> ${carData.transmission}`;
+                document.getElementById('carImage').style.backgroundImage = `url('${carData.image}')`;
+
+                const bookBtn = document.getElementById('bookBtn');
+
+                // Set default dates to tomorrow
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(10, 0, 0, 0); // 10 AM
+
+                const dayAfter = new Date(tomorrow);
+                dayAfter.setDate(dayAfter.getDate() + 1);
+
+                // Format for datetime-local: YYYY-MM-DDThh:mm
+                const formatForInput = (date) => {
+                    return date.getFullYear() + '-' +
+                        String(date.getMonth() + 1).padStart(2, '0') + '-' +
+                        String(date.getDate()).padStart(2, '0') + 'T' +
+                        String(date.getHours()).padStart(2, '0') + ':' +
+                        String(date.getMinutes()).padStart(2, '0');
+                };
+
+                document.getElementById('detailPickup').value = formatForInput(tomorrow);
+                document.getElementById('detailReturn').value = formatForInput(dayAfter);
+
+                bookBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pickup = document.getElementById('detailPickup').value;
+                    const drop = document.getElementById('detailReturn').value;
+
+                    if (!pickup || !drop) {
+                        document.getElementById('dateError').style.display = 'block';
+                        return;
+                    }
+
+                    // Format dates beautifully (e.g. 14 Oct 2026, 3:22 pm)
+                    const formatDisplayDate = (dateString) => {
+                        const d = new Date(dateString);
+                        const options = { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
+                        return d.toLocaleString('en-GB', options).replace(',', '');
+                    };
+
+                    const msg = `Hi, I would like to book the *${carData.name}* from *SWATHI CAR RENTALS.*
+
+*🚗 Car: ${carData.name}*
+*📅 Pickup:* ${formatDisplayDate(pickup)}
+*📅 Return:* ${formatDisplayDate(drop)}
+
+Could you please confirm whether the car is available for these dates and timings?
+
+Thank you,
+*SWATHI CAR RENTALS*`;
+
+                    const encodedMsg = encodeURIComponent(msg);
+                    window.open(`https://api.whatsapp.com/send?phone=917981372766&text=${encodedMsg}`, '_blank');
+                });
+            } else {
+                document.querySelector('.car-details-container').innerHTML = '<h2>Car not found</h2>';
+            }
+        });
+    </script>
+</body>
+
+</html>

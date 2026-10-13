@@ -1,0 +1,280 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Swathi Car Rentals</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { display: flex; min-height: 100vh; background-color: #f1f5f9; color: #1e293b; overflow: hidden; }
+        
+        /* Login Overlay */
+        #login-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; display: flex; align-items: center; justify-content: center; z-index: 9999; }
+        .login-box { background: white; padding: 40px; border-radius: 10px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .login-box h2 { margin-bottom: 25px; color: #1e293b; font-size: 1.5rem; }
+        .login-error { color: #ef4444; font-size: 0.9rem; margin-bottom: 15px; display: none; }
+        
+        /* Sidebar */
+        .sidebar { width: 260px; background-color: #0f172a; color: white; display: flex; flex-direction: column; }
+        .sidebar-brand { padding: 20px; font-size: 1.5rem; font-weight: 700; text-align: center; border-bottom: 1px solid #1e293b; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .sidebar-brand img { height: 60px; }
+        .sidebar-menu { flex: 1; padding: 20px 0; }
+        .menu-item { padding: 15px 25px; display: flex; align-items: center; gap: 15px; color: #cbd5e1; text-decoration: none; transition: 0.3s; }
+        .menu-item:hover, .menu-item.active { background-color: #1e293b; color: white; border-left: 4px solid #ef4444; }
+        
+        /* Main Content */
+        .main-content { flex: 1; display: flex; flex-direction: column; height: 100vh; }
+        .header { background: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .content-area { padding: 40px; overflow-y: auto; flex: 1; }
+        
+        /* Dashboard Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .stat-card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 20px; }
+        .stat-icon { width: 60px; height: 60px; border-radius: 50%; background: #fee2e2; color: #ef4444; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .stat-info h3 { font-size: 2rem; font-weight: 700; }
+        .stat-info p { color: #64748b; font-size: 0.9rem; font-weight: 500; text-transform: uppercase; }
+
+        /* Panels */
+        .panel-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+        @media (max-width: 1024px) { .panel-grid { grid-template-columns: 1fr; } }
+        .panel { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .panel h2 { font-size: 1.2rem; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0; }
+        
+        /* Form */
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; font-size: 0.9rem; color: #475569; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; outline: none; transition: 0.3s; }
+        .form-group input:focus, .form-group select:focus { border-color: #ef4444; box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+        .btn-primary { background: #ef4444; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; width: 100%; transition: 0.3s; font-size: 1rem; }
+        .btn-primary:hover { background: #dc2626; }
+        
+        /* Table */
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #f1f5f9; }
+        th { color: #64748b; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        td { font-size: 0.95rem; vertical-align: middle; }
+        .car-img-thumb { height: 40px; width: 60px; object-fit: cover; border-radius: 5px; }
+        .btn-delete { background: #fee2e2; color: #ef4444; border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
+        .btn-delete:hover { background: #ef4444; color: white; }
+    </style>
+</head>
+<body>
+
+    <!-- Login Overlay -->
+    <div id="login-overlay">
+        <div class="login-box">
+            <img src="assets/images/logo_transparent.png" alt="Logo" style="height: 60px; margin-bottom: 15px;">
+            <h2>Admin Login</h2>
+            <div id="loginError" class="login-error">Invalid User ID or Password!</div>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label>User ID</label>
+                    <input type="text" id="adminUser" required placeholder="Enter User ID">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="adminPass" required placeholder="Enter Password">
+                </div>
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Login</button>
+                <a href="index.html" style="display: block; margin-top: 20px; color: #64748b; text-decoration: none; font-size: 0.9rem;">Return to Website</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-brand">
+            <img src="assets/images/logo_transparent.png" alt="Logo">
+            Admin Panel
+        </div>
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item active"><i class="fas fa-car"></i> Manage Fleet</a>
+            <a href="index.html" class="menu-item" style="margin-top: 20px; border-top: 1px solid #1e293b;"><i class="fas fa-external-link-alt"></i> Back to Website</a>
+            <a href="#" onclick="logoutAdmin()" class="menu-item" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h2>Dashboard Overview</h2>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 40px; height: 40px; background: #ef4444; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">AD</div>
+                <span style="font-weight: 600;">Admin</span>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-car-side"></i></div>
+                    <div class="stat-info">
+                        <h3 id="total-cars">0</h3>
+                        <p>Total Cars</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-grid">
+                <!-- Add Car Panel -->
+                <div class="panel">
+                    <h2><i class="fas fa-plus-circle"></i> Add New Car</h2>
+                    <form id="add-car-form">
+                        <div class="form-group"><label>Car Name</label><input type="text" id="carName" required placeholder="e.g. Kia Seltos"></div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group"><label>Category</label><input type="text" id="carCategory" required placeholder="SUV"></div>
+                            <div class="form-group"><label>Seats</label><input type="number" id="carSeats" required value="5"></div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="form-group"><label>Fuel Type</label><select id="carFuel"><option>Petrol</option><option>Diesel</option><option>EV</option></select></div>
+                            <div class="form-group"><label>Transmission</label><select id="carTrans"><option>Manual</option><option>Auto</option></select></div>
+                        </div>
+                        <div class="form-group"><label>Price / 12hrs (₹)</label><input type="number" id="carPrice" required placeholder="2000"></div>
+                        <div class="form-group"><label>Image URL</label><input type="text" id="carImage" required placeholder="assets/images/car.jpg"></div>
+                        <button type="submit" class="btn-primary">Add Vehicle to Fleet</button>
+                    </form>
+                </div>
+
+                <!-- List Cars Panel -->
+                <div class="panel">
+                    <h2><i class="fas fa-list"></i> Current Fleet</h2>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Price / 12hrs</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-car-list"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/fleet.js?v=35"></script>
+    <script>
+        // Check for file:// protocol
+        if (window.location.protocol === 'file:') {
+            alert("⚠️ WARNING: You opened this file directly from your computer (file://). Any cars you add here will NOT show up on your Live Server website! Please open your main website (127.0.0.1:5500) and click the 'Admin' link in the footer to add cars properly.");
+        }
+
+        // Admin Auth Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const isLoggedIn = sessionStorage.getItem('admin_logged_in');
+            if (isLoggedIn === 'true') {
+                document.getElementById('login-overlay').style.display = 'none';
+                document.body.style.overflow = 'auto';
+                loadAdminCars();
+            }
+        });
+
+        document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const user = document.getElementById('adminUser').value;
+            const pass = document.getElementById('adminPass').value;
+            
+            // Hardcoded Credentials (You can change these)
+            if (user === 'admin' && pass === 'admin123') {
+                sessionStorage.setItem('admin_logged_in', 'true');
+                document.getElementById('login-overlay').style.display = 'none';
+                document.body.style.overflow = 'auto';
+                loadAdminCars();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+            }
+        });
+
+        function logoutAdmin() {
+            sessionStorage.removeItem('admin_logged_in');
+            window.location.reload();
+        }
+
+        function loadAdminCars() {
+            const list = document.getElementById('admin-car-list');
+            const cars = getFleet();
+            
+            document.getElementById('total-cars').textContent = cars.length;
+
+            list.innerHTML = cars.map((car, index) => `
+                <tr>
+                    <td><img src="${car.image}" class="car-img-thumb"></td>
+                    <td style="font-weight: 600;">${car.name}</td>
+                    <td><span style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-size: 0.85rem;">${car.category}</span></td>
+                    <td style="color: #ef4444; font-weight: 600;">&#8377;${car.price} / 12hrs</td>
+                    <td><button onclick="editCar(${index})" class="btn-primary" style="padding: 8px 12px; margin-right: 5px; width: auto;"><i class="fas fa-edit"></i></button><button onclick="deleteCar(${index})" class="btn-delete"><i class="fas fa-trash"></i></button></td>
+                </tr>
+            `).join('');
+        }
+        
+        function deleteCar(index) {
+            if(confirm("Are you sure you want to remove this car?")) {
+                let cars = getFleet();
+                cars.splice(index, 1);
+                localStorage.setItem('swathi_fleet', JSON.stringify(cars));
+                loadAdminCars();
+            }
+        }
+
+                let editIndex = -1;
+
+        function editCar(index) {
+            const cars = getFleet();
+            const car = cars[index];
+            editIndex = index;
+
+            document.getElementById('carName').value = car.name;
+            document.getElementById('carCategory').value = car.category;
+            document.getElementById('carSeats').value = car.seats;
+            document.getElementById('carFuel').value = car.fuel;
+            document.getElementById('carTrans').value = car.transmission;
+            document.getElementById('carPrice').value = car.price;
+            document.getElementById('carImage').value = car.image;
+
+            document.querySelector('#add-car-form button[type="submit"]').textContent = "Update Vehicle";
+            document.querySelector('.panel h2').innerHTML = '<i class="fas fa-edit"></i> Edit Car';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.getElementById('add-car-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('carName').value;
+            const newCar = {
+                id: name.toLowerCase().replace(/[^a-z0-9]/g, '-'),
+                name: name,
+                category: document.getElementById('carCategory').value,
+                seats: document.getElementById('carSeats').value,
+                fuel: document.getElementById('carFuel').value,
+                transmission: document.getElementById('carTrans').value,
+                price: document.getElementById('carPrice').value,
+                image: document.getElementById('carImage').value
+            };
+            
+            let cars = getFleet();
+            
+            if (editIndex > -1) {
+                // Keep the original ID if updating
+                newCar.id = cars[editIndex].id;
+                cars[editIndex] = newCar;
+                editIndex = -1;
+                document.querySelector('#add-car-form button[type="submit"]').textContent = "Add Vehicle to Fleet";
+                document.querySelector('.panel h2').innerHTML = '<i class="fas fa-plus-circle"></i> Add New Car';
+            } else {
+                cars.push(newCar);
+            }
+            
+            localStorage.setItem('swathi_fleet', JSON.stringify(cars));
+            loadAdminCars();
+            e.target.reset();
+        });
+    </script>
+</body>
+</html>
+
