@@ -154,14 +154,15 @@ html, body {
         border-bottom: 1px solid #f1f5f9;
     }
 
-    /* Hero Section Fix - No more overlapping! */
+    /* Hero Section Mobile - Compact banner */
     .hero {
         height: auto !important;
-        min-height: auto !important;
+        min-height: 340px !important;
         display: flex !important;
-        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
         position: relative !important;
-        padding: 0 !important;
+        padding: 40px 15px !important;
         background-color: #0f172a !important;
     }
 
@@ -174,7 +175,7 @@ html, body {
     }
 
     .hero-content {
-        padding: 40px 15px 25px !important;
+        padding: 0 !important;
         text-align: center !important;
         position: relative !important;
         z-index: 2 !important;
@@ -182,82 +183,41 @@ html, body {
     }
 
     .hero-content h1 {
-        font-size: 2rem !important;
+        font-size: 2.1rem !important;
         line-height: 1.25 !important;
-        margin-bottom: 15px !important;
+        margin-bottom: 12px !important;
     }
 
     .hero-content p {
         font-size: 0.95rem !important;
         margin-bottom: 20px !important;
-        line-height: 1.5 !important;
+        line-height: 1.4 !important;
     }
 
     .hero-buttons {
-        margin-bottom: 10px !important;
-    }
-
-    .hero-buttons .btn {
-        padding: 12px 30px !important;
-        font-size: 1.05rem !important;
-        width: 100%;
-        max-width: 240px;
-    }
-
-    /* Search Section flows cleanly right below Hero Text */
-    .search-section {
-        position: relative !important;
-        bottom: auto !important;
-        left: auto !important;
-        width: 100% !important;
-        padding: 22px 15px !important;
-        background-color: #ffffff !important;
-        border-radius: 20px 20px 0 0 !important;
-        box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.12) !important;
-        z-index: 5 !important;
-        margin-top: 15px !important;
-    }
-
-    .search-form {
-        grid-template-columns: 1fr !important;
-        gap: 12px !important;
-    }
-
-    .form-group {
         margin-bottom: 0 !important;
     }
 
-    .form-group label {
-        font-size: 0.88rem !important;
-        margin-bottom: 5px !important;
-        color: #475569 !important;
-        font-weight: 600 !important;
-    }
-
-    .form-control {
-        padding: 12px 14px !important;
-        font-size: 1rem !important;
-        border-radius: 8px !important;
-    }
-
-    .search-form .btn {
-        padding: 14px !important;
+    .hero-buttons .btn {
+        padding: 12px 32px !important;
         font-size: 1.05rem !important;
-        margin-top: 5px !important;
         border-radius: 8px !important;
+        box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
     }
 
-    /* Fleet Section */
-    .section-padding {
-        padding: 35px 0 !important;
+    /* Fleet Section Mobile - Sits directly below the hero banner */
+    .featured-cars {
+        padding-top: 25px !important;
+        padding-bottom: 35px !important;
     }
 
     .section-header {
-        margin-bottom: 25px !important;
+        margin-bottom: 20px !important;
     }
 
     .section-header h2 {
-        font-size: 1.75rem !important;
+        font-size: 1.85rem !important;
+        margin-bottom: 6px !important;
     }
 
     .section-header p {
@@ -266,16 +226,17 @@ html, body {
 
     .car-grid {
         grid-template-columns: 1fr !important;
-        gap: 20px !important;
+        gap: 22px !important;
         padding: 0 5px !important;
     }
 
     .car-card {
         max-width: 100% !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
     }
 
     .car-image {
-        height: 210px !important;
+        height: 220px !important;
     }
 
     .car-content {
@@ -374,7 +335,7 @@ html, body {
     }
 
     .hero-content h1 {
-        font-size: 1.8rem !important;
+        font-size: 1.85rem !important;
     }
 
     .feature-list {

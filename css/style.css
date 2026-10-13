@@ -254,15 +254,13 @@ ul {
 
 /* Hero Section */
 .hero {
-    height: 100vh;
-    min-height: 600px;
+    height: 70vh;
+    min-height: 480px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    background-color: #333;
-    /* Fallback color */
-    overflow: hidden;
+    background-color: #0f172a;
 }
 
 .hero-slider {
@@ -378,50 +376,7 @@ ul {
     color: var(--color-text-main);
 }
 
-/* Search Section */
-.search-section {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.95);
-    padding: 20px 0;
-    border-top: 1px solid rgba(220, 38, 38, 0.2);
-    z-index: 10;
-    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
-}
 
-.search-form {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    align-items: end;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 10px;
-    color: var(--color-text-muted);
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-.form-control {
-    width: 100%;
-    padding: 16px;
-    font-size: 1.1rem;
-    background-color: var(--color-bg-darker);
-    border: 1px solid #cbd5e1;
-    color: var(--color-text-main);
-    border-radius: var(--border-radius-sm);
-    font-family: var(--font-body);
-}
-
-.search-form .btn {
-    padding: 16px;
-    font-size: 1.2rem;
-    font-weight: 700;
-}
 
 .form-control:focus {
     outline: none;
