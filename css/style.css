@@ -192,9 +192,8 @@ ul {
 
 .nav-container {
     width: 100%;
-    max-width: 1300px;
-    margin: 0 auto;
-    padding: 0 30px;
+    max-width: 100%;
+    padding: 0 50px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -204,19 +203,19 @@ ul {
 .navbar-brand {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
     text-decoration: none;
 }
 
 .nav-logo {
-    height: 65px;
+    height: 90px;
     width: auto;
     object-fit: contain;
 }
 
 .nav-brand-text {
     font-family: 'Inter', sans-serif;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: 800;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -226,14 +225,14 @@ ul {
 
 .navbar-nav {
     display: flex;
-    gap: 25px;
+    gap: 35px;
     align-items: center;
 }
 
 .navbar-nav a {
     color: var(--color-text-main);
     font-weight: 600;
-    font-size: 1.15rem;
+    font-size: 1.25rem;
     transition: var(--transition);
 }
 
