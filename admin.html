@@ -228,7 +228,7 @@
 
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/fleet.js?v=43"></script>
+    <script src="js/fleet.js?v=44"></script>
     <script>
         // Admin Auth Logic
         document.addEventListener('DOMContentLoaded', () => {
@@ -245,7 +245,7 @@
             const user = document.getElementById('adminUser').value;
             const pass = document.getElementById('adminPass').value;
             
-            if (user === 'admin' && pass === 'admin123') {
+            if ((user === 'Bobby9405' || user.toLowerCase() === 'bobby9405') && (pass === 'Bobby9405' || pass === 'bobby9405')) {
                 sessionStorage.setItem('admin_logged_in', 'true');
                 document.getElementById('login-overlay').style.display = 'none';
                 document.body.style.overflow = 'auto';
