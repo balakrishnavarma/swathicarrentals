@@ -57,7 +57,6 @@
         
         /* Form */
         .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
         .form-group { margin-bottom: 12px; text-align: left; }
         .form-group label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.8rem; color: #475569; }
         .form-group input, .form-group select { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem; outline: none; transition: 0.2s; }
@@ -133,10 +132,10 @@
                         </div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-icon" id="cloud-sync-icon" style="background: #fffbeb; color: #f59e0b;"><i class="fas fa-cloud"></i></div>
+                        <div class="stat-icon" id="cloud-sync-icon" style="background: #ecfdf5; color: #10b981;"><i class="fas fa-database"></i></div>
                         <div class="stat-info">
-                            <h3 id="cloud-sync-status" style="font-size: 1.1rem; color: #f59e0b;">Checking Cloud...</h3>
-                            <p id="cloud-sync-subtext">Google Firebase Cloud</p>
+                            <h3 id="cloud-sync-status" style="font-size: 1.1rem; color: #10b981;">Supabase Connected</h3>
+                            <p id="cloud-sync-subtext">PostgreSQL Cloud DB</p>
                         </div>
                     </div>
                 </div>
@@ -227,10 +226,9 @@
         </div>
     </div>
 
-    <!-- Firebase SDK (Compat) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="js/fleet.js?v=42"></script>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/fleet.js?v=43"></script>
     <script>
         // Admin Auth Logic
         document.addEventListener('DOMContentLoaded', () => {
@@ -312,7 +310,6 @@
             document.getElementById('form-title-text').textContent = "Edit Car: " + car.name;
             document.getElementById('cancel-edit-btn').style.display = 'block';
 
-            // Scroll content area directly to top so the form is 100% visible
             const contentArea = document.querySelector('.content-area');
             if (contentArea) {
                 contentArea.scrollTo({ top: 0, behavior: 'smooth' });
@@ -357,9 +354,11 @@
                 loadAdminCars();
                 
                 if (res.cloud) {
-                    alert(`✅ Success!\n\n"${carData.name}" has been updated and synced to all devices (phones & laptops) worldwide!`);
+                    alert(`✅ Success!\n\n"${carData.name}" has been updated in Supabase and synced to all devices (phones & laptops) worldwide!`);
+                } else if (res.tableMissing) {
+                    alert(`⚠️ Saved on this device, but not synced to Supabase yet!\n\nReason: The "cars" table hasn't been created in Supabase SQL editor yet. Please run the SQL snippet in Supabase SQL Editor.`);
                 } else {
-                    alert(`⚠️ Updated locally on this laptop, but NOT synced to your phone yet!\n\nReason: Your Firebase Cloud Firestore database has not been created yet in Firebase Console.\n\nPlease open your Firebase tab (Tab 2) and click "Create database".`);
+                    alert(`⚠️ Updated locally. Cloud notice: ${res.error || 'Check connection'}`);
                 }
             } catch (err) {
                 alert("Error saving vehicle: " + err.message);
@@ -379,48 +378,47 @@
                 icon.style.background = '#ecfdf5';
                 icon.style.color = '#10b981';
                 statusText.style.color = '#10b981';
-                statusText.textContent = "Active & Synced";
+                statusText.textContent = "Supabase Synced";
 
                 noticeBox.innerHTML = `
                     <div style="background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; display: flex; align-items: center; justify-content: space-between; padding: 12px 18px; border-radius: 8px;">
                         <div>
                             <i class="fas fa-check-circle" style="color: #10b981; font-size: 1.1rem; margin-right: 8px;"></i>
-                            <strong>Cloud Sync Live:</strong> Cars added, edited, or deleted are instantly synchronized across all laptops and mobile phones worldwide.
+                            <strong>Supabase Cloud Live:</strong> Real-time cross-device sync is active across all laptops and mobile phones worldwide.
                         </div>
                         <button onclick="forceSyncMasterFleet()" style="background: #10b981; color: white; border: none; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; white-space: nowrap;"><i class="fas fa-sync-alt"></i> Re-sync 15 Master Cars</button>
+                    </div>
+                `;
+            } else if (status.tableMissing) {
+                icon.style.background = '#fffbeb';
+                icon.style.color = '#f59e0b';
+                statusText.style.color = '#f59e0b';
+                statusText.textContent = "Table Required";
+
+                noticeBox.innerHTML = `
+                    <div style="background: #fffbeb; border: 1px solid #fde68a; color: #92400e; padding: 16px 20px; border-radius: 8px; line-height: 1.5;">
+                        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 6px; color: #b45309;">
+                            <i class="fas fa-database" style="margin-right: 8px;"></i> Supabase Connected! Just 1 Step: Run SQL in SQL Editor
+                        </div>
+                        <p style="margin-bottom: 10px; font-size: 0.92rem;">
+                            Your Supabase credentials are successfully authenticated! Please run the 1-click table creation query in your Supabase SQL Editor so your cars can sync across devices.
+                        </p>
+                        <a href="https://supabase.com/dashboard/project/gbyqvgodcowjukdgblfi/sql/new" target="_blank" style="display: inline-block; background: #3ecf8e; color: #064e3b; padding: 7px 16px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.88rem;"><i class="fas fa-terminal"></i> Open Supabase SQL Editor</a>
                     </div>
                 `;
             } else {
                 icon.style.background = '#fffbeb';
                 icon.style.color = '#f59e0b';
                 statusText.style.color = '#f59e0b';
-                statusText.textContent = "Action Required in Tab 2";
-
-                noticeBox.innerHTML = `
-                    <div style="background: #fffbeb; border: 1px solid #fde68a; color: #92400e; padding: 16px 20px; border-radius: 8px; line-height: 1.5;">
-                        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 6px; color: #b45309;">
-                            <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i> Step Required: Activate Firestore in Firebase Tab 2
-                        </div>
-                        <p style="margin-bottom: 10px; font-size: 0.92rem;">
-                            Your Firebase credentials are connected, but you need to activate <strong>Firestore Database</strong> in your Firebase Console tab (Tab 2 in your browser) so edits sync to your phone:
-                        </p>
-                        <ol style="margin-left: 20px; margin-bottom: 12px; font-size: 0.88rem;">
-                            <li>Switch to <strong>Tab 2 ("New Project - ...")</strong> in your browser</li>
-                            <li>In the left sidebar under <strong>Build</strong>, click <strong>Firestore Database</strong></li>
-                            <li>Click the <strong>"Create database"</strong> button</li>
-                            <li>Select <strong>"Start in test mode"</strong> and click <strong>Enable</strong></li>
-                        </ol>
-                        <a href="https://console.firebase.google.com/project/swathicarrentals-9405/firestore" target="_blank" style="display: inline-block; background: #f59e0b; color: white; padding: 7px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.88rem;"><i class="fas fa-external-link-alt"></i> Open Firebase Console</a>
-                    </div>
-                `;
+                statusText.textContent = "Connecting...";
             }
         }
 
         async function forceSyncMasterFleet() {
-            if (!confirm("This will upload all 15 master cars to your Firebase Cloud Firestore. Continue?")) return;
+            if (!confirm("This will upload all 15 master cars to your Supabase Cloud Database. Continue?")) return;
             try {
                 await seedFleetToCloud();
-                alert("Success! All 15 master vehicles are uploaded to Cloud Firestore.");
+                alert("Success! All 15 master vehicles are uploaded to Supabase.");
                 loadAdminCars();
             } catch (err) {
                 alert("Sync failed: " + err.message);

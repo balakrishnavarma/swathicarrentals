@@ -1,15 +1,20 @@
-// Swathi Car Rentals - Fleet Management with Google Firebase Cloud Firestore Sync
-const firebaseConfig = {
-    apiKey: "AIzaSyCl_Gdx5vmbR-HAXVJ8NUPOo9zRd1Fnqqo",
-    authDomain: "swathicarrentals-9405.firebaseapp.com",
-    projectId: "swathicarrentals-9405",
-    storageBucket: "swathicarrentals-9405.firebasestorage.app",
-    messagingSenderId: "1066839742629",
-    appId: "1:1066839742629:web:e4893b44a84e72bf51154c",
-    measurementId: "G-QNV1462QCZ"
-};
+// Swathi Car Rentals - Fleet Management with Supabase Cloud Database Sync
+const SUPABASE_URL = "https://gbyqvgodcowjukdgblfi.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdieXF2Z29kY293anVrZGdibGZpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI0MjMyNjYsImV4cCI6MjEwNzk5OTI2Nn0.evi_QfYVCmWZSp3TDHdDBCjarTmNZgER96_7kuHkHE8";
 
-// Default master fleet (15 vehicles)
+// Initialize Supabase Client
+let supabaseClient = null;
+window.isCloudConnected = false;
+
+try {
+    if (typeof window.supabase !== 'undefined' && window.supabase.createClient) {
+        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    }
+} catch (e) {
+    console.warn("Supabase Init Notice:", e);
+}
+
+// Master default fleet (15 vehicles)
 const dummyCars = [
     { id: 'swift', name: 'Maruti Suzuki Swift', category: 'Hatchback', seats: 5, fuel: 'Petrol', transmission: 'Manual', price: 1500, image: 'assets/images/swift.jpg', order: 1 },
     { id: 'dzire', name: 'Maruti Suzuki Dzire', category: 'Sedan', seats: 5, fuel: 'Petrol', transmission: 'Manual', price: 1500, image: 'assets/images/dzire.jpg', order: 2 },
@@ -28,22 +33,7 @@ const dummyCars = [
     { id: 'scorpio-classic', name: 'Mahindra Scorpio Classic S11', category: 'SUV', seats: 7, fuel: 'Diesel', transmission: 'Manual', price: 4500, image: 'assets/images/scorpio_classic.jpg', order: 15 }
 ];
 
-// Initialize Firebase Compat
-let db = null;
-window.isCloudConnected = false;
-
-try {
-    if (typeof firebase !== 'undefined') {
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        db = firebase.firestore();
-    }
-} catch (e) {
-    console.warn("Firebase Init Notice:", e);
-}
-
-// Synchronous local getter for instant page rendering
+// Synchronous local getter for instant page rendering (0ms delay)
 function getFleet() {
     let stored = localStorage.getItem('swathi_fleet');
     if (!stored) {
@@ -62,47 +52,19 @@ function getFleet() {
     }
 }
 
-// Seed the 15 master vehicles into Firestore
+// Seed the 15 master vehicles into Supabase
 async function seedFleetToCloud() {
-    if (!db) throw new Error("Firebase is not initialized");
-    const batch = db.batch();
-    dummyCars.forEach((car, index) => {
-        const docRef = db.collection('cars').doc(car.id);
-        batch.set(docRef, { ...car, order: car.order || (index + 1) }, { merge: true });
-    });
-    await batch.commit();
-    console.log("All 15 master vehicles uploaded to Firebase Cloud Firestore!");
+    if (!supabaseClient) throw new Error("Supabase is not initialized");
+    const { data, error } = await supabaseClient.from('cars').upsert(dummyCars, { onConflict: 'id' });
+    if (error) {
+        console.error("Supabase seed error:", error);
+        throw error;
+    }
+    console.log("All 15 master vehicles uploaded to Supabase!");
     return true;
 }
 
-// Verify real server connection to Firestore
-async function verifyCloudConnection() {
-    if (!db) {
-        window.isCloudConnected = false;
-        window.dispatchEvent(new CustomEvent('swathi_cloud_status', { detail: { connected: false, error: 'Firebase not loaded' } }));
-        return false;
-    }
-    try {
-        // Query the server directly to verify database (default) exists
-        const testSnap = await db.collection('cars').limit(1).get({ source: 'server' });
-        window.isCloudConnected = true;
-        window.dispatchEvent(new CustomEvent('swathi_cloud_status', { detail: { connected: true } }));
-        return true;
-    } catch (err) {
-        window.isCloudConnected = false;
-        console.warn("Cloud connection check:", err.message);
-        window.dispatchEvent(new CustomEvent('swathi_cloud_status', { 
-            detail: { 
-                connected: false, 
-                error: err.message,
-                dbMissing: err.message.includes('not exist') || err.message.includes('NOT_FOUND')
-            } 
-        }));
-        return false;
-    }
-}
-
-// Save car (Add or Update) across local cache and Cloud Firestore
+// Save car (Add or Update) across local cache and Supabase
 async function saveCarToCloud(car) {
     // 1. Instant local update
     let cars = getFleet();
@@ -115,102 +77,107 @@ async function saveCarToCloud(car) {
     localStorage.setItem('swathi_fleet', JSON.stringify(cars));
     window.dispatchEvent(new CustomEvent('swathi_fleet_updated', { detail: cars }));
 
-    // 2. Cloud Firestore persist
-    if (db) {
+    // 2. Persist to Supabase
+    if (supabaseClient) {
         try {
-            await db.collection('cars').doc(car.id).set(car, { merge: true });
+            const { error } = await supabaseClient.from('cars').upsert(car, { onConflict: 'id' });
+            if (error) {
+                console.error("Supabase save error:", error);
+                window.isCloudConnected = false;
+                window.dispatchEvent(new CustomEvent('swathi_cloud_status', { 
+                    detail: { connected: false, error: error.message, tableMissing: error.code === 'PGRST205' } 
+                }));
+                return { success: true, cloud: false, error: error.message, tableMissing: error.code === 'PGRST205' };
+            }
             window.isCloudConnected = true;
             window.dispatchEvent(new CustomEvent('swathi_cloud_status', { detail: { connected: true } }));
             return { success: true, cloud: true };
         } catch (err) {
-            console.error("Firestore save error:", err);
-            window.isCloudConnected = false;
-            window.dispatchEvent(new CustomEvent('swathi_cloud_status', { 
-                detail: { 
-                    connected: false, 
-                    error: err.message,
-                    dbMissing: err.message.includes('not exist') || err.message.includes('NOT_FOUND')
-                } 
-            }));
+            console.error("Network error saving to Supabase:", err);
             return { success: true, cloud: false, error: err.message };
         }
     }
-    return { success: true, cloud: false, error: 'Firebase not initialized' };
+    return { success: true, cloud: false, error: 'Supabase client not loaded' };
 }
 
-// Delete car across local cache and Cloud Firestore
+// Delete car across local cache and Supabase
 async function deleteCarFromCloud(carId) {
     // 1. Instant local update
     let cars = getFleet().filter(c => c.id !== carId);
     localStorage.setItem('swathi_fleet', JSON.stringify(cars));
     window.dispatchEvent(new CustomEvent('swathi_fleet_updated', { detail: cars }));
 
-    // 2. Cloud Firestore delete
-    if (db) {
+    // 2. Delete from Supabase
+    if (supabaseClient) {
         try {
-            await db.collection('cars').doc(carId).delete();
+            const { error } = await supabaseClient.from('cars').delete().eq('id', carId);
+            if (error) {
+                console.error("Supabase delete error:", error);
+                return { success: true, cloud: false, error: error.message };
+            }
             return { success: true, cloud: true };
         } catch (err) {
-            console.warn("Firestore delete warning:", err);
+            console.warn("Supabase delete network error:", err);
             return { success: true, cloud: false, error: err.message };
         }
     }
     return { success: true, cloud: false };
 }
 
-// Real-time listener for Firestore sync
+// Initialize Supabase Sync & Real-time channel
 let isSyncListening = false;
-function initFleetSync(onUpdateCallback) {
-    if (!db || isSyncListening) return;
+async function initFleetSync(onUpdateCallback) {
+    if (!supabaseClient || isSyncListening) return;
     isSyncListening = true;
 
-    // Check server connection
-    verifyCloudConnection();
-
     try {
-        db.collection('cars').onSnapshot(async (snapshot) => {
-            // Only consider genuinely connected if metadata is from server or doc exists
-            if (!snapshot.metadata.fromCache || !snapshot.empty) {
-                window.isCloudConnected = true;
-                window.dispatchEvent(new CustomEvent('swathi_cloud_status', { detail: { connected: true } }));
-            }
+        // Fetch current fleet from Supabase
+        const { data, error } = await supabaseClient.from('cars').select('*').order('order', { ascending: true });
+        
+        if (error) {
+            window.isCloudConnected = false;
+            console.warn("Supabase fetch notice:", error.message);
+            window.dispatchEvent(new CustomEvent('swathi_cloud_status', { 
+                detail: { connected: false, error: error.message, tableMissing: error.code === 'PGRST205' } 
+            }));
+        } else {
+            window.isCloudConnected = true;
+            window.dispatchEvent(new CustomEvent('swathi_cloud_status', { detail: { connected: true } }));
 
-            if (snapshot.empty) {
-                // If cloud is connected and truly empty, seed default cars
-                if (!snapshot.metadata.fromCache) {
-                    console.log("Cloud Firestore 'cars' collection is empty. Auto-seeding initial 15 vehicles...");
-                    try {
-                        await seedFleetToCloud();
-                    } catch (e) {
-                        console.warn("Auto-seed notice:", e.message);
-                    }
+            if (!data || data.length === 0) {
+                console.log("Supabase cars table is empty. Auto-seeding 15 master vehicles...");
+                try {
+                    await seedFleetToCloud();
+                } catch (e) {
+                    console.warn("Auto-seed notice:", e.message);
                 }
             } else {
-                const cloudCars = [];
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    cloudCars.push({ id: doc.id, ...data });
-                });
-                cloudCars.sort((a, b) => (Number(a.order) || 999) - (Number(b.order) || 999));
-                localStorage.setItem('swathi_fleet', JSON.stringify(cloudCars));
-                window.dispatchEvent(new CustomEvent('swathi_fleet_updated', { detail: cloudCars }));
+                localStorage.setItem('swathi_fleet', JSON.stringify(data));
+                window.dispatchEvent(new CustomEvent('swathi_fleet_updated', { detail: data }));
                 if (typeof onUpdateCallback === 'function') {
-                    onUpdateCallback(cloudCars);
+                    onUpdateCallback(data);
                 }
             }
-        }, (error) => {
-            window.isCloudConnected = false;
-            console.warn("Firestore sync status (using local cache):", error.message);
-            window.dispatchEvent(new CustomEvent('swathi_cloud_status', { 
-                detail: { 
-                    connected: false, 
-                    error: error.message,
-                    dbMissing: error.message.includes('not exist') || error.message.includes('NOT_FOUND')
-                } 
-            }));
-        });
+        }
+
+        // Subscribe to real-time changes
+        supabaseClient
+            .channel('public:cars')
+            .on('postgres_changes', { event: '*', schema: 'public', table: 'cars' }, async (payload) => {
+                console.log("Supabase real-time update received:", payload);
+                const { data: updatedCars } = await supabaseClient.from('cars').select('*').order('order', { ascending: true });
+                if (updatedCars && updatedCars.length) {
+                    localStorage.setItem('swathi_fleet', JSON.stringify(updatedCars));
+                    window.dispatchEvent(new CustomEvent('swathi_fleet_updated', { detail: updatedCars }));
+                    if (typeof onUpdateCallback === 'function') {
+                        onUpdateCallback(updatedCars);
+                    }
+                }
+            })
+            .subscribe();
+
     } catch (err) {
-        console.warn("Firestore sync setup notice:", err.message);
+        console.warn("Supabase sync initialization error:", err);
     }
 }
 
