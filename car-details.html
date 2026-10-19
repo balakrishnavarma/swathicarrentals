@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Car Details | Swathi Car Rentals</title>
-    <link rel="stylesheet" href="css/style.css?v=40">
-    <link rel="stylesheet" href="css/responsive.css?v=40">
+    <link rel="stylesheet" href="css/style.css?v=41">
+    <link rel="stylesheet" href="css/responsive.css?v=41">
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -127,10 +127,13 @@
         </div>
     </main>
     <div id="footer-container"></div>
-    <script src="js/main.js?v=40"></script>
-    <script src="js/fleet.js?v=40"></script>
+    <script src="js/main.js?v=41"></script>
+    <!-- Firebase SDK (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="js/fleet.js?v=41"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        function renderCarDetails() {
             const urlParams = new URLSearchParams(window.location.search);
             const carId = urlParams.get('car');
             const cars = getFleet();
@@ -138,7 +141,7 @@
 
             if (carData) {
                 document.getElementById('carName').textContent = carData.name;
-                document.getElementById('carPrice').textContent = "₹" + carData.price.toLocaleString('en-IN') + " / 12hrs";
+                document.getElementById('carPrice').textContent = "₹" + Number(carData.price).toLocaleString('en-IN') + " / 12hrs";
                 document.getElementById('carSeats').innerHTML = `<i class="fas fa-users"></i> ${carData.seats} Seats`;
                 document.getElementById('carFuel').innerHTML = `<i class="fas fa-gas-pump"></i> ${carData.fuel}`;
                 document.getElementById('carTrans').innerHTML = `<i class="fas fa-cogs"></i> ${carData.transmission}`;
@@ -168,10 +171,14 @@
                         String(date.getMinutes()).padStart(2, '0');
                 };
 
-                document.getElementById('detailPickup').value = formatForInput(tomorrow);
-                document.getElementById('detailReturn').value = formatForInput(dayAfter);
+                if (!document.getElementById('detailPickup').value) {
+                    document.getElementById('detailPickup').value = formatForInput(tomorrow);
+                }
+                if (!document.getElementById('detailReturn').value) {
+                    document.getElementById('detailReturn').value = formatForInput(dayAfter);
+                }
 
-                bookBtn.addEventListener('click', (e) => {
+                bookBtn.onclick = (e) => {
                     e.preventDefault();
                     const pickup = document.getElementById('detailPickup').value;
                     const drop = document.getElementById('detailReturn').value;
@@ -188,25 +195,21 @@
                         return d.toLocaleString('en-GB', options).replace(',', '');
                     };
 
-                    const msg = `Hi, I would like to book the *${carData.name}* from *SWATHI CAR RENTALS.*
-
-*🚗 Car: ${carData.name}*
-*📅 Pickup:* ${formatDisplayDate(pickup)}
-*📅 Return:* ${formatDisplayDate(drop)}
-
-Could you please confirm whether the car is available for these dates and timings?
-
-Thank you,
-*SWATHI CAR RENTALS*`;
+                    const msg = `Hi, I would like to book the *${carData.name}* from *SWATHI CAR RENTALS.*\n\n*Car: ${carData.name}*\n*Pickup:* ${formatDisplayDate(pickup)}\n*Return:* ${formatDisplayDate(drop)}\n\nCould you please confirm whether the car is available for these dates and timings?\n\nThank you,\n*SWATHI CAR RENTALS*`;
 
                     const encodedMsg = encodeURIComponent(msg);
                     window.open(`https://api.whatsapp.com/send?phone=917981372766&text=${encodedMsg}`, '_blank');
-                });
-            } else {
-                document.querySelector('.car-details-container').innerHTML = '<h2>Car not found</h2>';
+                };
             }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCarDetails();
+        });
+
+        window.addEventListener('swathi_fleet_updated', () => {
+            renderCarDetails();
         });
     </script>
 </body>
-
 </html>
