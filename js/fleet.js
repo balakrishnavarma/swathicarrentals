@@ -30,7 +30,7 @@ const dummyCars = [
 
 // Initialize Firebase Compat
 let db = null;
-let isCloudConnected = false;
+window.isCloudConnected = false;
 
 try {
     if (typeof firebase !== 'undefined') {
@@ -75,6 +75,33 @@ async function seedFleetToCloud() {
     return true;
 }
 
+// Verify real server connection to Firestore
+async function verifyCloudConnection() {
+    if (!db) {
+        window.isCloudConnected = false;
+        window.dispatchEvent(new CustomEvent('swathi_cloud_status', { detail: { connected: false, error: 'Firebase not loaded' } }));
+        return false;
+    }
+    try {
+        // Query the server directly to verify database (default) exists
+        const testSnap = await db.collection('cars').limit(1).get({ source: 'server' });
+        window.isCloudConnected = true;
+        window.dispatchEvent(new CustomEvent('swathi_cloud_status', { detail: { connected: true } }));
+        return true;
+    } catch (err) {
+        window.isCloudConnected = false;
+        console.warn("Cloud connection check:", err.message);
+        window.dispatchEvent(new CustomEvent('swathi_cloud_status', { 
+            detail: { 
+                connected: false, 
+                error: err.message,
+                dbMissing: err.message.includes('not exist') || err.message.includes('NOT_FOUND')
+            } 
+        }));
+        return false;
+    }
+}
+
 // Save car (Add or Update) across local cache and Cloud Firestore
 async function saveCarToCloud(car) {
     // 1. Instant local update
@@ -92,13 +119,23 @@ async function saveCarToCloud(car) {
     if (db) {
         try {
             await db.collection('cars').doc(car.id).set(car, { merge: true });
+            window.isCloudConnected = true;
+            window.dispatchEvent(new CustomEvent('swathi_cloud_status', { detail: { connected: true } }));
             return { success: true, cloud: true };
         } catch (err) {
-            console.warn("Firestore save warning:", err);
+            console.error("Firestore save error:", err);
+            window.isCloudConnected = false;
+            window.dispatchEvent(new CustomEvent('swathi_cloud_status', { 
+                detail: { 
+                    connected: false, 
+                    error: err.message,
+                    dbMissing: err.message.includes('not exist') || err.message.includes('NOT_FOUND')
+                } 
+            }));
             return { success: true, cloud: false, error: err.message };
         }
     }
-    return { success: true, cloud: false };
+    return { success: true, cloud: false, error: 'Firebase not initialized' };
 }
 
 // Delete car across local cache and Cloud Firestore
@@ -127,17 +164,26 @@ function initFleetSync(onUpdateCallback) {
     if (!db || isSyncListening) return;
     isSyncListening = true;
 
+    // Check server connection
+    verifyCloudConnection();
+
     try {
         db.collection('cars').onSnapshot(async (snapshot) => {
-            isCloudConnected = true;
-            window.dispatchEvent(new CustomEvent('swathi_cloud_status', { detail: { connected: true } }));
+            // Only consider genuinely connected if metadata is from server or doc exists
+            if (!snapshot.metadata.fromCache || !snapshot.empty) {
+                window.isCloudConnected = true;
+                window.dispatchEvent(new CustomEvent('swathi_cloud_status', { detail: { connected: true } }));
+            }
 
             if (snapshot.empty) {
-                console.log("Cloud Firestore 'cars' collection is empty. Auto-seeding initial 15 vehicles...");
-                try {
-                    await seedFleetToCloud();
-                } catch (e) {
-                    console.warn("Auto-seed notice:", e.message);
+                // If cloud is connected and truly empty, seed default cars
+                if (!snapshot.metadata.fromCache) {
+                    console.log("Cloud Firestore 'cars' collection is empty. Auto-seeding initial 15 vehicles...");
+                    try {
+                        await seedFleetToCloud();
+                    } catch (e) {
+                        console.warn("Auto-seed notice:", e.message);
+                    }
                 }
             } else {
                 const cloudCars = [];
@@ -153,9 +199,15 @@ function initFleetSync(onUpdateCallback) {
                 }
             }
         }, (error) => {
-            isCloudConnected = false;
+            window.isCloudConnected = false;
             console.warn("Firestore sync status (using local cache):", error.message);
-            window.dispatchEvent(new CustomEvent('swathi_cloud_status', { detail: { connected: false, error: error.message } }));
+            window.dispatchEvent(new CustomEvent('swathi_cloud_status', { 
+                detail: { 
+                    connected: false, 
+                    error: error.message,
+                    dbMissing: error.message.includes('not exist') || error.message.includes('NOT_FOUND')
+                } 
+            }));
         });
     } catch (err) {
         console.warn("Firestore sync setup notice:", err.message);
