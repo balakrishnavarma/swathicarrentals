@@ -164,7 +164,7 @@
                                         <option value="Hatchback">Hatchback</option>
                                         <option value="Sedan">Sedan</option>
                                         <option value="SUV">SUV</option>
-                                        <option value="MUV">MUV</option>
+                                        <option value="MUV/MPV">MUV/MPV</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -234,7 +234,7 @@
 
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/fleet.js?v=50"></script>
+    <script src="js/fleet.js?v=51"></script>
     <script>
         // Admin Auth Logic
         document.addEventListener('DOMContentLoaded', () => {
@@ -326,7 +326,7 @@
                 let lowerCat = cat.toLowerCase();
                 if (lowerCat.includes('hatch')) catSelect.value = 'Hatchback';
                 else if (lowerCat.includes('sedan')) catSelect.value = 'Sedan';
-                else if (lowerCat.includes('muv') || lowerCat.includes('mpv')) catSelect.value = 'MUV';
+                else if (lowerCat.includes('muv') || lowerCat.includes('mpv')) catSelect.value = 'MUV/MPV';
                 else if (lowerCat.includes('suv')) catSelect.value = 'SUV';
                 else catSelect.value = 'Hatchback';
             }
