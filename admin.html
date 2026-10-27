@@ -183,7 +183,6 @@
                                     <select id="carTrans">
                                         <option value="Manual">Manual</option>
                                         <option value="Automatic">Automatic</option>
-                                        <option value="Auto">Auto</option>
                                     </select>
                                 </div>
                             </div>
@@ -230,7 +229,7 @@
 
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/fleet.js?v=48"></script>
+    <script src="js/fleet.js?v=49"></script>
     <script>
         // Admin Auth Logic
         document.addEventListener('DOMContentLoaded', () => {
@@ -312,10 +311,8 @@
             document.getElementById('carSeats').value = car.seats;
             document.getElementById('carFuel').value = car.fuel;
             let t = (car.transmission || '').trim().toLowerCase();
-            if (t === 'automatic') {
+            if (t.includes('auto')) {
                 document.getElementById('carTrans').value = 'Automatic';
-            } else if (t === 'auto') {
-                document.getElementById('carTrans').value = 'Auto';
             } else {
                 document.getElementById('carTrans').value = 'Manual';
             }

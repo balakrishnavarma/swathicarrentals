@@ -18,18 +18,18 @@ try {
 const dummyCars = [
     { id: 'swift', name: 'Maruti Suzuki Swift', category: 'Hatchback', seats: 5, fuel: 'Petrol', transmission: 'Manual', price: 1500, image: 'assets/images/swift.jpg', order: 1 },
     { id: 'dzire', name: 'Maruti Suzuki Dzire', category: 'Sedan', seats: 5, fuel: 'Petrol', transmission: 'Manual', price: 1500, image: 'assets/images/dzire.jpg', order: 2 },
-    { id: 'baleno', name: 'Maruti Suzuki Baleno', category: 'Premium Hatch', seats: 5, fuel: 'Petrol', transmission: 'Auto', price: 1500, image: 'assets/images/baleno.jpg', order: 3 },
-    { id: 'glanza', name: 'Toyota Glanza', category: 'Premium Hatch', seats: 5, fuel: 'Petrol', transmission: 'Auto', price: 1500, image: 'assets/images/glanza.jpg', order: 4 },
-    { id: 'fronx', name: 'Maruti Suzuki Fronx', category: 'Compact SUV', seats: 5, fuel: 'Petrol', transmission: 'Auto', price: 1500, image: 'assets/images/fronx.jpg', order: 5 },
+    { id: 'baleno', name: 'Maruti Suzuki Baleno', category: 'Premium Hatch', seats: 5, fuel: 'Petrol', transmission: 'Automatic', price: 1500, image: 'assets/images/baleno.jpg', order: 3 },
+    { id: 'glanza', name: 'Toyota Glanza', category: 'Premium Hatch', seats: 5, fuel: 'Petrol', transmission: 'Automatic', price: 1500, image: 'assets/images/glanza.jpg', order: 4 },
+    { id: 'fronx', name: 'Maruti Suzuki Fronx', category: 'Compact SUV', seats: 5, fuel: 'Petrol', transmission: 'Automatic', price: 1500, image: 'assets/images/fronx.jpg', order: 5 },
     { id: 'exter', name: 'Hyundai Exter', category: 'Compact SUV', seats: 5, fuel: 'Petrol', transmission: 'Manual', price: 1500, image: 'assets/images/exter.jpg', order: 6 },
     { id: 'aura', name: 'Hyundai Aura', category: 'Sedan', seats: 5, fuel: 'Petrol', transmission: 'Manual', price: 1500, image: 'assets/images/aura.jpg', order: 7 },
     { id: 'venue', name: 'Hyundai Venue', category: 'Compact SUV', seats: 5, fuel: 'Petrol', transmission: 'Manual', price: 2500, image: 'assets/images/venue.jpg', order: 8 },
-    { id: 'creta', name: 'Hyundai Creta', category: 'Mid-size SUV', seats: 5, fuel: 'Petrol', transmission: 'Auto', price: 2500, image: 'assets/images/creta.jpg', order: 9 },
-    { id: 'carens', name: 'Kia Carens', category: 'MUV', seats: 7, fuel: 'Petrol', transmission: 'Auto', price: 3000, image: 'assets/images/carens.jpg', order: 10 },
+    { id: 'creta', name: 'Hyundai Creta', category: 'Mid-size SUV', seats: 5, fuel: 'Petrol', transmission: 'Automatic', price: 2500, image: 'assets/images/creta.jpg', order: 9 },
+    { id: 'carens', name: 'Kia Carens', category: 'MUV', seats: 7, fuel: 'Petrol', transmission: 'Automatic', price: 3000, image: 'assets/images/carens.jpg', order: 10 },
     { id: 'thar', name: 'Mahindra Thar 4x4', category: '4x4 SUV', seats: 4, fuel: 'Diesel', transmission: 'Manual', price: 3500, image: 'assets/images/thar.jpg', order: 11 },
-    { id: 'scorpio-n', name: 'Mahindra Scorpio N', category: 'SUV', seats: 7, fuel: 'Diesel', transmission: 'Auto', price: 3500, image: 'assets/images/hero_scorpio.jpg', order: 12 },
+    { id: 'scorpio-n', name: 'Mahindra Scorpio N', category: 'SUV', seats: 7, fuel: 'Diesel', transmission: 'Automatic', price: 3500, image: 'assets/images/hero_scorpio.jpg', order: 12 },
     { id: 'innova', name: 'Toyota Innova Crysta', category: 'MUV', seats: 7, fuel: 'Diesel', transmission: 'Manual', price: 3500, image: 'assets/images/innova.jpg', order: 13 },
-    { id: 'xuv700', name: 'Mahindra XUV700', category: 'Luxury SUV', seats: 7, fuel: 'Diesel', transmission: 'Auto', price: 4500, image: 'assets/images/xuv700.jpg', order: 14 },
+    { id: 'xuv700', name: 'Mahindra XUV700', category: 'Luxury SUV', seats: 7, fuel: 'Diesel', transmission: 'Automatic', price: 4500, image: 'assets/images/xuv700.jpg', order: 14 },
     { id: 'scorpio-classic', name: 'Mahindra Scorpio Classic S11', category: 'SUV', seats: 7, fuel: 'Diesel', transmission: 'Manual', price: 4500, image: 'assets/images/scorpio_classic.jpg', order: 15 }
 ];
 
