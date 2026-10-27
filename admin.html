@@ -160,7 +160,12 @@
                             <div class="form-row-2">
                                 <div class="form-group">
                                     <label>Category</label>
-                                    <input type="text" id="carCategory" required placeholder="e.g. Hatchback">
+                                    <select id="carCategory">
+                                        <option value="Hatchback">Hatchback</option>
+                                        <option value="Sedan">Sedan</option>
+                                        <option value="SUV">SUV</option>
+                                        <option value="MUV">MUV</option>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label>Seats</label>
@@ -229,7 +234,7 @@
 
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/fleet.js?v=49"></script>
+    <script src="js/fleet.js?v=50"></script>
     <script>
         // Admin Auth Logic
         document.addEventListener('DOMContentLoaded', () => {
@@ -307,7 +312,24 @@
             editIndex = index;
 
             document.getElementById('carName').value = car.name;
-            document.getElementById('carCategory').value = car.category;
+            let cat = (car.category || '').trim();
+            const catSelect = document.getElementById('carCategory');
+            let matchedCat = false;
+            for (let opt of catSelect.options) {
+                if (opt.value.toLowerCase() === cat.toLowerCase()) {
+                    catSelect.value = opt.value;
+                    matchedCat = true;
+                    break;
+                }
+            }
+            if (!matchedCat) {
+                let lowerCat = cat.toLowerCase();
+                if (lowerCat.includes('hatch')) catSelect.value = 'Hatchback';
+                else if (lowerCat.includes('sedan')) catSelect.value = 'Sedan';
+                else if (lowerCat.includes('muv') || lowerCat.includes('mpv')) catSelect.value = 'MUV';
+                else if (lowerCat.includes('suv')) catSelect.value = 'SUV';
+                else catSelect.value = 'Hatchback';
+            }
             document.getElementById('carSeats').value = car.seats;
             document.getElementById('carFuel').value = car.fuel;
             let t = (car.transmission || '').trim().toLowerCase();
