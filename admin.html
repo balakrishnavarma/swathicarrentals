@@ -228,7 +228,7 @@
 
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/fleet.js?v=44"></script>
+    <script src="js/fleet.js?v=45"></script>
     <script>
         // Admin Auth Logic
         document.addEventListener('DOMContentLoaded', () => {
@@ -269,7 +269,7 @@
             list.innerHTML = cars.map((car, index) => `
                 <tr>
                     <td><img src="${car.image}" class="car-img-thumb" onerror="this.src='assets/images/swift.jpg'"></td>
-                    <td style="font-weight: 600;">${car.name}</td>
+                    <td style="font-weight: 600;">${car.name} <span style="font-size: 0.78rem; color: #64748b; font-weight: 500;">(${car.fuel})</span></td>
                     <td><span style="background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">${car.category}</span></td>
                     <td style="color: #ef4444; font-weight: 700;">&#8377;${Number(car.price).toLocaleString('en-IN')} / 12hrs</td>
                     <td>
@@ -332,9 +332,22 @@
             saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving to Cloud...';
 
             const name = document.getElementById('carName').value.trim();
+            const fuel = document.getElementById('carFuel').value;
             const cars = getFleet();
-            let carId = editIndex > -1 ? cars[editIndex].id : name.toLowerCase().replace(/[^a-z0-9]/g, '-');
-            if (!carId) carId = 'car-' + Date.now();
+
+            let carId;
+            if (editIndex > -1) {
+                carId = cars[editIndex].id;
+            } else {
+                let baseId = name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                if (!cars.some(c => c.id === baseId)) {
+                    carId = baseId;
+                } else if (!cars.some(c => c.id === `${baseId}-${fuel.toLowerCase()}`)) {
+                    carId = `${baseId}-${fuel.toLowerCase()}`;
+                } else {
+                    carId = `${baseId}-${Date.now().toString().slice(-4)}`;
+                }
+            }
 
             const carData = {
                 id: carId,
